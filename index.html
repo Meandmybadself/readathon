@@ -1,7 +1,6 @@
 <html>
     <head>
-	<!--- Replace this with the name of your webpage //-->
-        <title>Brooks Dot Cool</title>
+        <title>Read-a-thon Timer</title>
         <style>
             body,
             html {
@@ -12,23 +11,62 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                background-color: #F7F2EC;
             }
 
-            iframe {
-                /* 468pt is the maximum width of the content inside the iframe. */
-                max-width: 468pt;
-                margin: 0 auto;
+            * {
+                font-family: 'Manrope', sans-serif;
+            }
+
+            span#name,
+            span#timer {
+                font-weight: 600;
+                color: #FA7350;
+            }
+
+            body,
+            html {
                 height: 100%;
-                margin: 0;
-                padding: 0;
-                border: 0;
+            }
+
+            div#root {
+                padding: 1em;
+                font-size: 3em;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 0.5em;
+                background-color: #FA7350;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 0.5em;
             }
         </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     </head>
 
-    <body>
-        <!-- Update this with your Google Doc iframe HTML -->
-        <iframe width="100%"
-		src="https://docs.google.com/document/d/e/2PACX-1vSByy36Nn1OeX99y-XJ2atLcb90ktoLwSW31gL_zXC9VwgvC0z6FQxcJdh6aZQOMw8x5vyByDfWPjCo/pub?embedded=true"></iframe>
-    </body>
+</head>
+
+<body>
+    <div id="root">
+        <button id="toggleButton">Start</button>
+        <p>On today, <span id="currentDate"></span>,<br/>
+            <span id='name'>Brooks</span> has read for <span id="timer"></span>.</p>
+    </div>
+
+</body>
+
+<script src="./script.js"></script>
 </html>
