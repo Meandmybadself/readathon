@@ -1,4 +1,3 @@
-# simple-site
-Barebones / no framework template for a Github Pages site
+# Readathon Timer
 
-[Implementation details](https://me.meandmybadself.com/web/2023/01/10/brooks-dot-cool.html)
+A timer to help keep track of how much reading students of Eisenhower Elementary's Readathon have done.

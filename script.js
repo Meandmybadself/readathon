@@ -21,7 +21,9 @@ class ReadathonTimer {
             }
         })
 
-
+        this.childsNameEl.addEventListener('click', () => {
+            this.promptForName();
+        })
 
         setInterval(() => {
             this.checkDate()
@@ -52,15 +54,22 @@ class ReadathonTimer {
             timer.date = new Date(timer.date);
         });
 
-        // If child's name is not set, prompt for it
-        if (!this.data.childsName) {
-            this.data.childsName = prompt('What is your name?');
-            this.saveData();
-        }
+        this.promptForName()
 
         // If timer is running, start it
         if (this.data.isRunning) {
             this.start();
+        }
+    }
+
+    promptForName() {
+        if (!this.data.childsName) {
+            this.data.childsName = prompt('What is your name?');
+            if (this.data.childsName) {
+                this.saveData();
+            } else {
+                this.promptForName();
+            }
         }
     }
 
@@ -73,12 +82,14 @@ class ReadathonTimer {
         this.saveData();
         this.tick();
         this.tickInterval = setInterval(() => this.tick(), 1000);
+        this.updateDisplay
     }
 
     stop() {
         this.data.isRunning = false;
         clearInterval(this.tickInterval);
         this.saveData();
+        this.updateDisplay()
     }
 
     tick() {

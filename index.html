@@ -32,8 +32,6 @@
             div#pastTimersContainer,
             div#root,
             div#timerContainer {
-                padding: 1em;
-
                 width: 100%;
                 height: 100%;
                 display: flex;
@@ -48,6 +46,7 @@
 
             div#pastTimersContainer,
             div#timerContainer {
+                padding: 1em;
                 font-size: 3em;
                 width: 100%;
                 height: 100%;
@@ -57,9 +56,24 @@
                 justify-content: center;
             }
 
+            #timerContainer {
+                p {
+                    padding: 1em;
+                }
+            }
+
             div#pastTimersContainer {
                 background-color: #FA7350;
                 color: white;
+
+                footer a,
+                footer a:visited {
+                    font-size: 0.25em;
+                    text-decoration: none;
+                    border-bottom: 1px solid white;
+
+                    color: white;
+                }
             }
 
             h2 {
@@ -87,6 +101,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+        <link rel="icon" type="image/png" href="./favicon.ico">
     </head>
 
 </head>
@@ -97,16 +112,20 @@
             <button id="toggleButton">Start</button>
             <p>
                 Today, <span id="currentDate"></span>,<br/>
-                <span id='name'>Brooks</span> has read for <span id="timer">0 seconds</span>.
+                <span id='name'></span> has read for <span id="timer">0 seconds</span>.
             </p>
         </div>
         <div id="pastTimersContainer">
             <h2>Past Timers</h2>
             <ul id="pastTimers"></ul>
-        </div>
+
+            <footer>
+                <a href='https://github.com/Meandmybadself/readathon'>Source Code</a>
+            </footer>
+        </body>
     </div>
 
-</body>
+</div>
 
 <script src="./script.js"></script>
 </html>
