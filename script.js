@@ -54,7 +54,7 @@ class ReadathonTimer {
 
         // If child's name is not set, prompt for it
         if (!this.data.childsName) {
-            this.data.childsName = prompt('What is your child\'s name?');
+            this.data.childsName = prompt('What is your name?');
             this.saveData();
         }
 
