@@ -1,82 +1,136 @@
-let running = false;
-let elapsedSeconds = 0;
-let interval;
+class ReadathonTimer {
+    constructor() {
 
-// Update Timer Display Function
-function updateTimerDisplay(elapsedSec) {
-    const hours = Math.floor(elapsedSec / 3600);
-    const minutes = Math.floor((elapsedSec % 3600) / 60);
-    const seconds = elapsedSec % 60;
-    const timerDisplay = document.getElementById('timer');
+        this.childsNameEl = document.getElementById('name')
+        this.todaysDateEl = document.getElementById('currentDate')
+        this.timeEl = document.getElementById('timer')
+        this.pastTimersEl = document.getElementById('pastTimers')
+        this.startStopButton = document.getElementById('toggleButton');
 
-    let displayText = '';
-    if (hours > 0) {
-        displayText += `${hours} hour${hours > 1 ? 's' : ''} `;
-    }
-    if (minutes > 0 || hours > 0) { // Display minutes if there are hours
-        displayText += `${minutes} minute${minutes > 1 ? 's' : ''} `;
-    }
-    displayText += `${seconds} second${seconds > 1 ? 's' : ''}`;
+        // load data from local storage
+        this.loadData();
+        this.checkDate();
 
-    timerDisplay.textContent = displayText;
-}
+        this.updateDisplay();
 
-
-// Start Timer Function
-function startTimer() {
-    running = true;
-    interval = setInterval(() => {
-        elapsedSeconds++;
-        updateTimerDisplay(elapsedSeconds);
-        saveData();
-    }, 1000);
-}
-
-// Stop Timer Function
-function stopTimer() {
-    clearInterval(interval);
-    running = false;
-    saveData();
-}
-
-// Save Data Function
-function saveData() {
-    const currentDateDisplay = document.getElementById('currentDate');
-    localStorage.setItem('readingTimerData', JSON.stringify({ elapsedSeconds, currentDate: currentDateDisplay.textContent, running }));
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('toggleButton');
-    const currentDateDisplay = document.getElementById('currentDate');
-
-    // Initialize from local storage
-    const loadData = () => {
-        const storedData = JSON.parse(localStorage.getItem('readingTimerData'));
-        if (storedData) {
-            elapsedSeconds = storedData.elapsedSeconds;
-            currentDateDisplay.textContent = storedData.currentDate;
-            running = storedData.running;
-            updateTimerDisplay(elapsedSeconds);
-            if (running) {
-                startTimer();
-                toggleButton.textContent = 'Stop';
+        this.startStopButton.addEventListener('click', () => {
+            if (this.data.isRunning) {
+                this.stop();
+            } else {
+                this.start();
             }
-        } else {
-            // Set to today's date and 0 for the time elapsed
-            currentDateDisplay.textContent = "Tuesday, Jan 30th";
-            localStorage.setItem('readingTimerData', JSON.stringify({ elapsedSeconds, currentDate: "Tuesday, Jan 30th", running }));
-        }
-    };
+        })
 
-    loadData();
 
-    toggleButton.addEventListener('click', () => {
-        if (running) {
-            stopTimer();
-            toggleButton.textContent = 'Start';
-        } else {
-            startTimer();
-            toggleButton.textContent = 'Stop';
+
+        setInterval(() => {
+            this.checkDate()
+        }, 5000);
+    }
+
+    checkDate() {
+
+        if (!this.data.timers.length || this.data.timers[this.data.timers.length - 1]?.date?.getDate() !== new Date().getDate()) {
+            this.data.isRunning = false;
+
+            // Save date as YYYY-MM-DD
+            this.data.timers.push({ elapsed: 0, date: new Date(new Date().toDateString()) });
+            this.saveData();
+            this.updateDisplay();
         }
-    });
-});
+    }
+
+    loadData() {
+        this.data = JSON.parse(localStorage.getItem('readathon-timer')) || {
+            childsName: '',
+            isRunning: false,
+            timers: []
+        };
+
+        // Parse dates from strings
+        this.data.timers.forEach(timer => {
+            timer.date = new Date(timer.date);
+        });
+
+        // If child's name is not set, prompt for it
+        if (!this.data.childsName) {
+            this.data.childsName = prompt('What is your child\'s name?');
+            this.saveData();
+        }
+
+        // If timer is running, start it
+        if (this.data.isRunning) {
+            this.start();
+        }
+    }
+
+    saveData() {
+        localStorage.setItem('readathon-timer', JSON.stringify(this.data));
+    }
+
+    start() {
+        this.data.isRunning = true;
+        this.saveData();
+        this.tick();
+        this.tickInterval = setInterval(() => this.tick(), 1000);
+    }
+
+    stop() {
+        this.data.isRunning = false;
+        clearInterval(this.tickInterval);
+        this.saveData();
+    }
+
+    tick() {
+        this.data.timers[this.data.timers.length - 1].elapsed++;
+        this.saveData();
+        this.updateDisplay();
+    }
+
+    updateDisplay() {
+        this.childsNameEl.textContent = this.data.childsName;
+
+        // Format today's date as "DayOfWeek, Mon. Date"
+        const options = { weekday: 'long', month: 'short', day: 'numeric' };
+        const today = new Date().toLocaleDateString('en-US', options);
+        this.todaysDateEl.textContent = today;
+
+        this.timeEl.textContent = this.formatTime(this.data.timers[this.data.timers.length - 1].elapsed);
+
+        const pastTimersMinusToday = this.data.timers.slice(0, -1);
+
+        if (pastTimersMinusToday.length) {
+            this.pastTimersEl.innerHTML = pastTimersMinusToday.map(timer => {
+                const formattedDate = timer.date.toLocaleDateString('en-US', options);
+                return `<li>${formattedDate} - ${this.formatTime(timer.elapsed)}</li>`;
+            }).join('');
+        } else {
+            this.pastTimersEl.innerHTML = '';
+        }
+
+        this.startStopButton.textContent = this.data.isRunning ? 'Stop' : 'Start';
+    }
+
+    formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+
+        let formattedTime = '';
+
+        if (hours > 0) {
+            formattedTime += `${hours} hours `;
+        }
+
+        if (minutes > 0) {
+            formattedTime += `${minutes} minutes `;
+        }
+
+        formattedTime += `${remainingSeconds} seconds`;
+
+        return formattedTime;
+    }
+}
+
+new ReadathonTimer();
+

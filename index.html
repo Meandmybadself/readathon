@@ -29,8 +29,21 @@
                 height: 100%;
             }
 
-            div#root {
+            div#pastTimersContainer,
+            div#root,
+            div#timerContainer {
                 padding: 1em;
+
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            div#pastTimersContainer,
+            div#timerContainer {
                 font-size: 3em;
                 width: 100%;
                 height: 100%;
@@ -38,6 +51,20 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+            }
+
+            div#pastTimersContainer {
+                background-color: #FA7350;
+                color: white;
+            }
+
+            h2 {
+                margin: 0;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
             }
 
             button {
@@ -61,9 +88,17 @@
 
 <body>
     <div id="root">
-        <button id="toggleButton">Start</button>
-        <p>On today, <span id="currentDate"></span>,<br/>
-            <span id='name'>Brooks</span> has read for <span id="timer">0 seconds</span>.</p>
+        <div id="timerContainer">
+            <button id="toggleButton">Start</button>
+            <p>
+                Today, <span id="currentDate"></span>,<br/>
+                <span id='name'>Brooks</span> has read for <span id="timer">0 seconds</span>.
+            </p>
+        </div>
+        <div id="pastTimersContainer">
+            <h2>Past Timers</h2>
+            <ul id="pastTimers"></ul>
+        </div>
     </div>
 
 </body>
